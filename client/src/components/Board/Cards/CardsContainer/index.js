@@ -12,6 +12,7 @@ import {
   WrappedSection,
   CardContainerHeader,
   ContainerContainerTitle,
+  StyledMdDelete,
   CardsContainer,
   AddCardButtonDiv,
   AddCardButtonSpan,
@@ -71,6 +72,17 @@ const UPDATE_CARD = gql`
   }
 `;
 
+const DELETE_SECTION = gql`
+  mutation DeleteSection($sectionId: String!) {
+    deleteSection(request: { sectionId: $sectionId }) {
+      id
+      title
+      label
+      pos
+    }
+  }
+`;
+
 const ON_CARD_UPDATE_SUBSCRIPTION = gql`
   subscription {
     onCardPosChange {
@@ -84,7 +96,7 @@ const ON_CARD_UPDATE_SUBSCRIPTION = gql`
   }
 `;
 
-const CardContainer = ({ item, boards }) => {
+const CardContainer = ({ item, boards, refetchBoard }) => {
   const [cards, setCards] = useState([]);
   const [isTempCardActive, setTempCardActive] = useState(false);
   const [cardText, setCardText] = useState("");
@@ -92,6 +104,7 @@ const CardContainer = ({ item, boards }) => {
   const [insertCard, { data }] = useMutation(ADD_CARD);
 
   const [updateCardPos] = useMutation(UPDATE_CARD);
+  const [deleteSection] = useMutation(DELETE_SECTION);
 
   const { data: { cardAdded } = {} } = useSubscription(onCardAdded);
 
@@ -210,6 +223,9 @@ const CardContainer = ({ item, boards }) => {
               ? cards[cards.length - 1].pos + 16348
               : 16348,
         },
+      }).then(() => {
+        refetchBoard();
+        // setCardText("");
       });
 
       setCardText("");
@@ -222,13 +238,23 @@ const CardContainer = ({ item, boards }) => {
         <WrappedSection>
           <CardContainerHeader className={"column-drag-handle"}>
             <ContainerContainerTitle>{item.title}</ContainerContainerTitle>
+            <StyledMdDelete
+              size={18}
+              onClick={() => {
+                deleteSection({
+                  variables: {
+                    sectionId: item.id,
+                  },
+                }).then(() => {
+                  refetchBoard();
+                });
+              }}
+            />
           </CardContainerHeader>
           <CardsContainer>
             <Container
               orientation={"vertical"}
               groupName="col"
-              // onDragStart={(e) => console.log("Drag Started")}
-              // onDragEnd={(e) => console.log("drag end", e)}
               onDrop={(e) => {
                 console.log("card", e);
                 onCardDrop(item.id, e.addedIndex, e.removedIndex, e.payload);
@@ -262,6 +288,8 @@ const CardContainer = ({ item, boards }) => {
                   <ListCardDetails>
                     <ListCardTextArea
                       placeholder="Enter a title for the card"
+                      value={cardText} 
+                      autoFocus
                       onChange={(e) => {
                         setCardText(e.target.value);
                       }}
@@ -269,19 +297,15 @@ const CardContainer = ({ item, boards }) => {
                   </ListCardDetails>
                 </ListCardComponent>
                 <SubmitCardButtonDiv>
-                  <SubmitCardButton
-                    type="button"
-                    value="Add Card"
-                    onClick={onAddCardSubmit}
-                  />
-                  <SubmitCardIcon>
-                    <IoIosAdd />
-                  </SubmitCardIcon>
+                  <SubmitCardButton onClick={onAddCardSubmit}>
+                    <IoIosAdd size={32} />
+                    <span>Add Card</span>
+                  </SubmitCardButton>
                 </SubmitCardButtonDiv>
               </CardComposerDiv>
             ) : (
               <AddCardButtonDiv onClick={onAddButtonClick}>
-                <AddCardButtonSpan>Add another card</AddCardButtonSpan>
+                <AddCardButtonSpan>Add new card</AddCardButtonSpan>
               </AddCardButtonDiv>
             )}
           </CardsContainer>

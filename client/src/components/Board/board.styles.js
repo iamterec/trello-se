@@ -1,8 +1,10 @@
 import styled from "styled-components";
 
 export const BoardContainer = styled.div`
+  gap: 10px;
   background-color: rgb(49, 121, 186);
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: row;
   color: #393939;
@@ -16,28 +18,38 @@ export const BoardContainer = styled.div`
 export const CardHorizontalContainer = styled.div``;
 
 export const AddSectionDiv = styled.div`
+  margin-top: 4px;
   background-color: rgba(0, 0, 0, 0.08);
   cursor: pointer;
   border-radius: 3px;
   height: auto;
   min-height: 32px;
   padding: 4px;
-  width: 272px;
+  min-width: 272px;
   transition: background 85ms ease-in, opacity 40ms ease-in,
     border-color 85ms ease-in;
 `;
 
-export const AddSectionForm = styled.form``;
-
-export const AddSectionLink = styled.a`
-  text-decoration: none;
+export const AddSectionForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 6px;
+}
 `;
 
-export const AddSectionLinkSpan = styled.span`
-  color: #172b4d;
+export const AddSectionContainer = styled.div`
+  // text-decoration: none;
+  display: flex;
+  align-items: center;
+  color: #eee;
 `;
 
-export const HideSectionLinkSpan = styled(AddSectionLinkSpan)`
+export const AddSectionText = styled.div`
+  // color: #172b4d;
+`;
+
+export const HideSectionLinkSpan = styled(AddSectionText)`
   color: #fff;
   display: none;
   padding: 6px 8px;
@@ -74,9 +86,15 @@ export const ActiveAddSectionInput = styled(AddSectionInput)`
 
 export const SubmitCardButtonDiv = styled.div`
   height: 32px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 `;
 
-export const SubmitCardButton = styled.input`
+export const SubmitCardButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #5aac44;
   box-shadow: none;
   border: none;

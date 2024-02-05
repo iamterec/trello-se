@@ -11,8 +11,8 @@ import {
   CardHorizontalContainer,
   AddSectionDiv,
   AddSectionForm,
-  AddSectionLink,
-  AddSectionLinkSpan,
+  AddSectionContainer,
+  AddSectionText,
   AddSectionLinkIconSpan,
   AddSectionInput,
   ActiveAddSectionInput,
@@ -97,7 +97,7 @@ const Board = () => {
   const [boards, setBoards] = useState([]);
   const [AddSection, { insertSection }] = useMutation(ADD_SECTION);
 
-  const { loading, error, data } = useQuery(BOARD_QUERY);
+  const { loading, error, data, refetch } = useQuery(BOARD_QUERY);
 
   const [updateSectionPos] = useMutation(UPDATE_SECTION_POS);
 
@@ -183,6 +183,8 @@ const Board = () => {
               ? boards[boards.length - 1].pos + 16384
               : 16384,
         },
+      }).then(() => {
+        refetch();
       });
     }
   };
@@ -207,39 +209,38 @@ const Board = () => {
       >
         {boards.length > 0 &&
           boards.map((item, index) => (
-            <CardContainer item={item} key={index} boards={boards} />
+            <CardContainer
+              item={item}
+              key={index}
+              boards={boards}
+              refetchBoard={refetch}
+            />
           ))}
       </Container>
       <AddSectionDiv onClick={() => setAddSectionInputActive(true)}>
-        <AddSectionForm>
-          {isAddSectionInputActive ? (
+        {isAddSectionInputActive ? (
+          <AddSectionForm>
             <React.Fragment>
               <ActiveAddSectionInput
+                autoFocus
                 onChange={(e) => setAddSectionInputText(e.target.value)}
               />
               <SubmitCardButtonDiv>
-                <SubmitCardButton
-                  type="button"
-                  value="Add Card"
-                  onClick={onAddSectionSubmit}
-                />
-                <SubmitCardIcon>
-                  <IoIosAdd />
-                </SubmitCardIcon>
+                <SubmitCardButton onClick={onAddSectionSubmit}>
+                  <IoIosAdd size={32} />
+                  <span>Add section</span>
+                </SubmitCardButton>
               </SubmitCardButtonDiv>
             </React.Fragment>
-          ) : (
-            <React.Fragment>
-              <AddSectionLink href="#">
-                <AddSectionLinkSpan>
-                  <IoIosAdd size={28} />
-                  Add another list
-                </AddSectionLinkSpan>
-              </AddSectionLink>
-              <AddSectionInput />
-            </React.Fragment>
-          )}
-        </AddSectionForm>
+          </AddSectionForm>
+        ) : (
+          <React.Fragment>
+            <AddSectionContainer>
+              <IoIosAdd size={28} />
+              <AddSectionText>Add a new section</AddSectionText>
+            </AddSectionContainer>
+          </React.Fragment>
+        )}
       </AddSectionDiv>
     </BoardContainer>
   );
