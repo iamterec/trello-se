@@ -1,3 +1,4 @@
+import { MdDelete } from "react-icons/md";
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
@@ -5,6 +6,7 @@ export const Wrapper = styled.div`
   height: 100%;
   vertical-align: top;
   white-space: normal;
+  margin-inline: 16px;
   opacity: ${(props) => (props.isDragging ? 0 : 1)};
 `;
 
@@ -24,14 +26,26 @@ export const WrappedSection = styled.section`
 export const CardContainerHeader = styled.header`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  padding-left: 10px;
+  justify-content: space-between;
 `;
 
-export const ContainerContainerTitle = styled.span`
+export const StyledMdDelete = styled(MdDelete)`
+  padding: 8px;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(255, 82, 82, 0.6);
+    border-radius: 4px;
+  }
+`;
+
+export const ContainerContainerTitle = styled.h2`
   font-weight: bold;
-  font-size: 15px;
-  line-height: 18px;
+  font-size: 18px;
+  line-height: 16px;
   cursor: grab;
-  width: 70%;
+  width: 80%;
 `;
 
 export const CardsContainer = styled.div`
@@ -39,17 +53,20 @@ export const CardsContainer = styled.div`
   overflow-y: auto;
   align-self: center;
   max-height: 90vh;
-  margin-top: 10px;
+  margin-top: 20px;
   flex-direction: column;
   justify-content: space-between;
+  width: 100%;
 `;
 
 export const AddCardButtonDiv = styled.div`
   min-height: 24px;
   max-height: 24px;
   cursor: pointer;
+  padding: 10px;
+  margin-top: 10px;
 
-  :hover {
+  &:hover {
     background-color: rgba(9, 30, 66, 0.08);
     color: #172b4d;
   }
@@ -57,6 +74,8 @@ export const AddCardButtonDiv = styled.div`
 
 export const AddCardButtonSpan = styled.span`
   color: #5e6c84;
+  display: flex;
+  justify-content: center;
 `;
 
 export const CardComposerDiv = styled.div``;
@@ -102,10 +121,14 @@ export const ListCardTextArea = styled.textarea`
 `;
 
 export const SubmitCardButtonDiv = styled.div`
+  display: flex;
+  align-items: center;
   height: 32px;
 `;
 
-export const SubmitCardButton = styled.input`
+export const SubmitCardButton = styled.button`
+  display: flex;
+  align-items: center;
   background-color: #5aac44;
   box-shadow: none;
   border: none;
